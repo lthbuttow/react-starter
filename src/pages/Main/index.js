@@ -3,7 +3,9 @@ import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 import api from '../../services/api';
-import { Container, Form, SubmitButton, List } from './styles';
+
+import Container from '../../components/Container';
+import { Form, SubmitButton, List } from './styles';
 
 export default class Main extends Component {
   // eslint-disable-next-line react/state-in-constructor
@@ -11,7 +13,6 @@ export default class Main extends Component {
     newRepo: '',
     repositories: [],
     loading: false,
-    formLength: false,
   };
 
   // Carrega os dados do localStorage
@@ -35,14 +36,6 @@ export default class Main extends Component {
 
   handleInputChange = e => {
     this.setState({ newRepo: e.target.value });
-
-    const { newRepo } = this.state;
-
-    if (newRepo.length >= 5) {
-      this.setState({ formLength: true });
-    } else {
-      this.setState({ formLength: false });
-    }
   };
 
   handleSubmit = async e => {
@@ -64,12 +57,11 @@ export default class Main extends Component {
       repositories: [...repositories, data],
       newRepo: '',
       loading: false,
-      formLength: false,
     });
   };
 
   render() {
-    const { newRepo, formLength, repositories, loading } = this.state;
+    const { newRepo, repositories, loading } = this.state;
     return (
       <Container>
         <h1>
@@ -85,7 +77,7 @@ export default class Main extends Component {
             onChange={this.handleInputChange}
           />
 
-          <SubmitButton loading={loading} formLength={formLength}>
+          <SubmitButton loading={loading}>
             {loading ? (
               <FaSpinner color="#FFF" size={14} />
             ) : (

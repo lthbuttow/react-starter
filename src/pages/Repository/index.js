@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
+import { FaSpinner } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import api from '../../services/api';
 
+import Container from '../../components/Container';
+import { Loading, Owner } from './styles';
+
 export default class Repository extends Component {
+  // eslint-disable-next-line react/static-property-placement
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
@@ -11,6 +17,7 @@ export default class Repository extends Component {
     }).isRequired,
   };
 
+  // eslint-disable-next-line react/state-in-constructor
   state = {
     repository: {},
     issues: [],
@@ -33,7 +40,7 @@ export default class Repository extends Component {
     ]);
 
     this.setState({
-      repository: repository.date,
+      repository: repository.data,
       issues: issues.data,
       loading: false,
     });
@@ -42,6 +49,24 @@ export default class Repository extends Component {
   render() {
     const { repository, issues, loading } = this.state;
 
-    return <h1>Repository</h1>;
+    if (loading) {
+      return (
+        <Loading>
+          <FaSpinner color="#FFF" size={24} />
+          Carregando
+        </Loading>
+      );
+    }
+
+    return (
+      <Container>
+        <Owner>
+          <Link to="/">Voltar aos repositórios</Link>
+          <img src={repository.owner.avatar_url} alt={repository.owner.login} />
+          <h1>{repository.name}</h1>
+          <p>{repository.description}</p>
+        </Owner>
+      </Container>
+    );
   }
 }
